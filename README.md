@@ -1,6 +1,6 @@
 # Hornet C/C++
 
-Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供基于 clangd 的代码浏览、项目索引和交互式函数调用图。
+Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供四种解析模式、项目索引和交互式函数调用图。
 
 本仓库发布插件安装包和使用说明。安装包从 **0.0.1** 开始独立编号。
 
@@ -26,7 +26,7 @@ Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供基于 clangd 的�
 也可以使用命令行，例如：
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.1-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.2-win32-x64.vsix --force
 ```
 
 扩展 ID 为 `hornet.hornet-cpp`，要求 VS Code 1.85 或更新版本。如果已经安装旧发布渠道的 0.1.x 版本，本渠道的 0.0.1 编号更小，需要手动从 VSIX 安装；确认扩展详情显示目标版本。此渠道暂不通过 VS Code Marketplace 自动更新，请关注 Releases。
@@ -36,8 +36,8 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 ## 首次打开项目
 
 1. 打开并信任 C/C++ 项目文件夹。
-2. 扩展会搜索可用的 clangd。Windows x64、glibc Linux x64、macOS x64/ARM64 支持缺失时自动下载并校验；其他目标请先在工作区主机上安装 clangd。
-3. 扩展自动发现编译数据库或 CMake 构建配置，并建立项目索引。状态栏显示索引进度和 **Index ready**。
+2. 默认 Hybrid 模式自动发现编译数据库；未配置数据库时直接启用 Tag 索引。有编译命令的文件使用 clangd。Windows x64、glibc Linux x64、macOS x64/ARM64 支持缺失时自动下载 clangd 并校验；其他目标请安装 clangd 或选择 Tag / Flyweight。
+3. 扩展建立项目索引。状态栏显示索引进度，完成后显示 **Hornet C/C++: idle**。
 4. 在函数上右键选择 **Hornet Show Graph** 查看调用图。
 
 安装包按平台生成，不代表该平台会附带 clangd 或编译器。交叉编译项目仍需配置实际工具链、头文件路径和宏定义。
@@ -86,11 +86,37 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 }
 ```
 
-目前 Hybrid 使用 clangd；Tag/Flyweight 尚未实现，选择它们不会切换到新的后端。
+## 解析模式
 
-## 常见问题
+点击底部模式名称或执行 **Hornet C/C++: Switch Parsing Mode**：
 
-**clangd 下载失败：** 点击状态栏 **Hornet: Retry clangd** 重试；可以通过 **Hornet C/C++: Configure clangd** 指定已安装的可执行文件。下载支持 VS Code HTTP 代理及 `HTTPS_PROXY` / `HTTP_PROXY` 环境变量。
+| 模式 | 工作方式 | 所需配置 |
+| --- | --- | --- |
+| Hybrid（推荐） | 同时维护 Tag 索引和可用的 Compiler 服务，按文件的编译命令覆盖情况自动选择 | 没有编译数据库时使用 Tag；语义功能需要数据库和 clangd |
+| Flyweight | 后台线程运行 Tree-sitter C/C++ WebAssembly 解析器，近期文件使用增量语法树 | 无须安装编译器、clangd 或生成数据库 |
+| Compiler | clangd 提供语义跳转、重命名、重构、实时编译诊断等 | 有效的 compile_commands.json 和 clangd |
+| Tag | 后台线程快速建立词法标签索引，开箱即用 | 无额外工具要求 |
+
+Tag / Flyweight 支持符号搜索、大纲、补全、定义/声明跳转、语法引用和调用图。它们不会执行预处理、类型检查或重构，同名符号可能返回多个候选；精确重命名、重构和编译错误请使用 Compiler，或为 Hybrid 配置对应文件的编译命令。Flyweight 的速度取决于文件和编辑方式，不保证所有项目都快于 Tag。
+
+轻量索引保存在内存中，重新打开窗口会重新扫描；单文件限制为 8 MB，排除目录可通过 `hornet-cpp.excludePaths` 调整。Flyweight 的语法包随 VSIX 附带，无须联网下载。
+
+## 状态与维护
+
+悬停 **Hornet C/C++: idle** 显示 **Hornet C/C++ Status**、Activated、实际安装版本、模式、CPU Usage；点击状态栏可打开相同操作的菜单。VS Code 的状态栏右键菜单由编辑器管理，因此 Hornet 使用悬停链接和左键菜单提供这些操作。
+
+- **Open Extension Logs / Open Clangd Logs / Open WeCode-DB Logs**：分别查看扩展、编译服务和 Tag/Flyweight 索引日志。
+- **Open Settings**：打开 Hornet 设置。点击模式或 CPU Usage 可直接修改；CPU 默认 Maximum，可改为 High、Medium、Low。
+- **Update Index**：更新现有索引；**Rebuild Index**：重启解析器、清除工作区标准 clangd 索引缓存并重新扫描。
+- **Reload window**：重新加载 VS Code 窗口。
+- **Clear Errors**：清除 Hornet 当前诊断；下一次解析产生的错误会再次显示。
+- **FAQ**：打开下方常见问题。
+
+CPU 设置控制 clangd 线程数量和轻量后台解析器的工作占比，并非操作系统级 CPU 使用率硬上限。WeCode-DB 是 Hornet 轻量索引日志的名称。
+
+## FAQ
+
+**clangd 下载失败：** 执行 **Hornet C/C++: Auto Setup clangd** 重试，或通过 **Hornet C/C++: Configure clangd** 指定已安装的可执行文件。下载支持 VS Code HTTP 代理及 `HTTPS_PROXY` / `HTTP_PROXY` 环境变量。Hybrid 此时仍可使用 Tag；也可以切换到 Flyweight。
 
 **索引或调用关系不完整：** 检查编译数据库、工具链路径、头文件搜索路径和预处理宏。基础扫描有目录深度和文件数量限制，大型项目应提供真实编译数据库。
 
