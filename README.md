@@ -4,11 +4,11 @@ Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供四种解析模式
 
 ## 功能演示
 
-![Hornet C/C++ 功能演示：函数调用图、悬停高亮连线、切换解析模式和打开状态菜单](https://github.com/codehubcloud/hornet-cpptools-release/releases/download/v0.0.4/hornet-demo.gif)
+![Hornet C/C++ 功能演示：函数调用图、悬停高亮连线、切换解析模式和打开状态菜单](https://github.com/codehubcloud/hornet-cpptools-release/releases/download/v0.0.5/hornet-demo.gif)
 
 **看清调用关系，快速定位代码。** 动图依次展示函数调用图、连线动态追踪、四种解析模式，以及 CPU、日志和索引维护入口。调用图还支持一键展开和折叠。
 
-[单独打开动图](https://github.com/codehubcloud/hornet-cpptools-release/releases/download/v0.0.4/hornet-demo.gif) · [下载最新版本](https://github.com/codehubcloud/hornet-cpptools-release/releases/latest)
+[单独打开动图](https://github.com/codehubcloud/hornet-cpptools-release/releases/download/v0.0.5/hornet-demo.gif) · [下载最新版本](https://github.com/codehubcloud/hornet-cpptools-release/releases/latest)
 
 本仓库发布插件安装包和使用说明。安装包从 **0.0.1** 开始独立编号。
 
@@ -34,7 +34,7 @@ Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供四种解析模式
 也可以使用命令行，例如：
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.4-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.5-win32-x64.vsix --force
 ```
 
 扩展 ID 为 `hornet.hornet-cpp`，要求 VS Code 1.85 或更新版本。如果已经安装旧发布渠道的 0.1.x 版本，本渠道的 0.0.1 编号更小，需要手动从 VSIX 安装；确认扩展详情显示目标版本。此渠道暂不通过 VS Code Marketplace 自动更新，请关注 Releases。
@@ -45,7 +45,7 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 
 1. 打开并信任 C/C++ 项目文件夹。
 2. 默认 Hybrid 模式自动发现编译数据库；未配置数据库时直接启用 Tag 索引。有编译命令的文件使用 clangd。Windows x64、glibc Linux x64、macOS x64/ARM64 支持缺失时自动下载 clangd 并校验；其他目标请安装 clangd 或选择 Tag / Flyweight。
-3. 扩展建立项目索引。状态栏以持续旋转图标显示正在索引，悬停查看扫描进度和数量；完成后显示 **Hornet C/C++: idle**。
+3. 扩展建立项目索引。状态栏以持续旋转图标显示正在索引，旁边显示当前扫描阶段的百分比和文件数量；悬停查看详细进度；完成后显示 **Hornet C/C++: idle**。
 4. 在函数上右键选择 **Hornet Show Graph** 查看调用图。
 
 安装包按平台生成，不代表该平台会附带 clangd 或编译器。交叉编译项目仍需配置实际工具链、头文件路径和宏定义。
