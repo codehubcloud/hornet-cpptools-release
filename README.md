@@ -1,14 +1,165 @@
 # Hornet C/C++
 
+Hornet C/C++ is a C/C++ language extension for VS Code with four parsing modes, project indexing and interactive function call graphs.
+
+## Demo
+
+![Hornet C/C++ demo: function call graphs, animated connection highlighting, parsing modes and the status menu](https://github.com/codehubcloud/hornet-cpptools-release/releases/download/v0.0.9/hornet-demo.gif)
+
+**Explore call relationships and navigate to the code.** The demo shows the call graph, animated connection tracing, four parsing modes, and shortcuts for CPU usage, logs and index maintenance. The graph also supports expanding and collapsing branches.
+
+[Open the demo](https://github.com/codehubcloud/hornet-cpptools-release/releases/download/v0.0.9/hornet-demo.gif) · [Download the latest release](https://github.com/codehubcloud/hornet-cpptools-release/releases/latest)
+
+This repository distributes extension installers and user documentation. This release channel has its own version sequence, starting at **0.0.1**.
+
+## Download and install
+
+Open the [latest release](https://github.com/codehubcloud/hornet-cpptools-release/releases/latest) and download the appropriate `.vsix` file from Assets.
+
+| Environment | Installer suffix |
+| --- | --- |
+| Windows x64 | `win32-x64.vsix` |
+| Windows ARM64 | `win32-arm64.vsix` |
+| Linux x64 | `linux-x64.vsix` |
+| Linux ARM64 | `linux-arm64.vsix` |
+| Linux ARMHF | `linux-armhf.vsix` |
+| macOS Intel | `darwin-x64.vsix` |
+| macOS Apple Silicon | `darwin-arm64.vsix` |
+| Alpine Linux x64 | `alpine-x64.vsix` |
+| Alpine Linux ARM64 | `alpine-arm64.vsix` |
+| Universal | `universal.vsix` |
+
+In VS Code, open Extensions, choose **… → Install from VSIX…**, select the installer, then run **Developer: Reload Window**.
+
+You can also install from the command line:
+
+```powershell
+code --install-extension ./hornet-cpp-0.0.9-win32-x64.vsix --force
+```
+
+The extension ID is `hornet.hornet-cpp`. VS Code 1.85 or later is required. If you previously installed a 0.1.x version from another release channel, install this channel's VSIX manually and check the version on the extension details page. This channel does not currently provide Marketplace updates; follow GitHub Releases.
+
+For Remote SSH, WSL or Dev Containers, install the extension on the workspace host and choose an installer for that host's operating system. Browser-only VS Code cannot run the local processes required by this extension.
+
+## Open your first project
+
+1. Open and trust a C/C++ project folder.
+2. The default Hybrid mode discovers compilation databases automatically. Files with compile commands use clangd; without a database, the Tag index provides basic browsing. Automatic clangd download and verification are available on Windows x64, glibc Linux x64, and macOS x64/ARM64. On other targets, install clangd or choose Tag / Flyweight.
+3. Hornet builds the project index. A spinning status icon and a percentage with file counts show progress; hover for details. When indexing completes, the status changes to **Hornet C/C++: idle**.
+4. Right-click a function and choose **Hornet Show Graph**.
+
+Platform-specific installers do not include a native clangd or compiler. Cross-compilation projects still need the actual toolchain, header paths and preprocessor definitions.
+
+## Features
+
+- Completion, hover information, signature help, definition/declaration navigation and references.
+- Rename, code actions, formatting, semantic highlighting, inlay hints, outlines and symbol search.
+- Call hierarchy, type hierarchy and interactive function call graphs.
+- Compilation database import, merge, validation, discovery and project index refresh.
+- Separate configuration and language services for each workspace folder.
+
+Available semantic features depend on the selected server and the completeness of the project's compile commands. The bundled formatter is also available in Tag and Flyweight modes.
+
+## Function call graph
+
+Right-click a C/C++ function and run **Hornet Show Graph** to open the **Hornet Graph** panel.
+
+- Use the plus/minus buttons on either side of a function to expand or collapse relationships. The selected function keeps its screen position and zoom level while new nodes are arranged around it.
+- Use the toolbar to expand or collapse branches together. Expansion respects the configured depth and the graph's node limit.
+- Hover over or click a connection to highlight its calling direction.
+- Click the background or press Esc to clear the selected connection.
+- Drag the background to pan, scroll or use the toolbar to zoom, and double-click a function to navigate to its code.
+- Use the center action to continue exploring from a different function.
+
+Each graph loads up to 250 functions. For larger call chains, change the center to explore another section. Branch groups receive their own space, sequential call chains remain horizontally aligned, and connection arrows attach to function ports.
+
+## Compilation settings and indexing
+
+Hornet stores processed compile commands in `.vscode/hornet/compile-db/compile_commands.json`. Run **Hornet C/C++: Import Compilation Database** to import an existing database, or use a configured CMake build directory.
+
+Without complete compile commands, macros, conditional compilation, header resolution and call relationships may be incomplete. Hybrid limits rename, code actions and diagnostics for files without compile commands. Compiler mode uses clangd's capabilities.
+
+Run **Hornet Build Index**, or click the indexing status item, to refresh the index. Indexing does not compile or link your program.
+
+Example settings:
+
+```json
+{
+  "hornet-cpp.languageProvider": "Hybrid",
+  "hornet-cpp.clangd.path": "clangd",
+  "hornet-cpp.cpuUsage": "Medium",
+  "hornet-cpp.clangd.ignoreDiagnostics": "not_indexed",
+  "hornet-cpp.clangd.enableInlayHints": true,
+  "hornet-cpp.syntaxColor.enable": true
+}
+```
+
+Open extension settings with **Hornet C/C++ → gear → Extension Settings**, or search for `@ext:hornet.hornet-cpp`. Setting descriptions and option labels follow the VS Code display language. JSON configuration keys and saved values remain unchanged.
+
+To use your own formatting configuration, set `hornet-cpp.clangd.formatFilePath` to an absolute path or a workspace-relative path such as `${workspaceFolder}/config/.clang-format`. An explicit file takes priority over project configuration. If no file is found and `clangd.forceFormatStyle` is enabled, the bundled Hornet fallback uses LLVM style with four-space indentation and a 120-column limit.
+
+## Parsing modes
+
+Click the mode in the status bar or run **Hornet C/C++: Switch Parsing Mode**.
+
+| Mode | Behavior | Requirements |
+| --- | --- | --- |
+| Hybrid (recommended) | Maintains a syntax index alongside the available Compiler service and routes requests according to compile-command coverage | Uses the syntax index without a database; semantic features need compile commands and clangd |
+| Flyweight | Runs the Tree-sitter C/C++ WebAssembly parser in background workers, with incremental syntax trees for recent files | No compiler, clangd or compilation database required |
+| Compiler | Uses clangd for semantic navigation, rename, refactoring and compilation diagnostics | Valid compile_commands.json and clangd |
+| Tag | Builds a fast lexical symbol index in background workers | No additional tools required |
+
+Tag / Flyweight provide symbol search, outlines, completion, definition/declaration navigation, syntax references and call graphs. They do not run preprocessing, type checking or refactoring; symbols with identical names may produce multiple candidates. Use Compiler, or supply compile commands for Hybrid, when precise semantic results are needed. Flyweight performance depends on the project and editing patterns.
+
+The built-in syntax index can persist a JSON cache and refresh it from project files. Source and header discovery includes uppercase file extensions and is independent of `.gitignore`, `files.exclude` and `search.exclude`. Hornet's global and mode-specific exclusions determine what is indexed; Tag and Flyweight exclude build/output directories by default. Read or parse failures are recorded in the logs. Parser and formatter WebAssembly assets are bundled in the VSIX.
+
+Custom native server executables must support the expected protocol. The built-in cache, symbol search and Hornet formatting fallback are this project's implementations; related settings describe differences from the original custom servers.
+
+## Status and maintenance
+
+Hover over **Hornet C/C++: idle** to see activation state, installed version, mode and CPU usage. Click the status item to open the maintenance menu.
+
+- **Open Extension Logs / Open Clangd Logs / Open Hornet-DB Logs** open extension, compiler and syntax-index logs.
+- **Open Settings** opens Hornet settings. The mode and CPU controls offer direct changes. CPU usage defaults to Maximum; High, Medium and Low are also available.
+- **Update Index** refreshes the current index. **Rebuild Index** restarts parsing, clears the workspace's standard clangd index cache and scans the project again.
+- **Reload window** reloads VS Code.
+- **Clear Errors** clears current Hornet diagnostics. Later analysis may report them again.
+- **FAQ** opens troubleshooting information.
+
+CPU settings control clangd's thread budget and the background parser's duty cycle; they are approximate targets rather than operating-system resource limits. Hornet-DB is the log name for the lightweight syntax index.
+
+## FAQ
+
+**clangd download failed:** Run **Hornet C/C++: Auto Setup clangd** to retry, or **Hornet C/C++: Configure clangd** to select an installed executable. Downloads support VS Code's HTTP proxy and the `HTTPS_PROXY` / `HTTP_PROXY` environment variables. Hybrid can continue with its syntax index; Flyweight is another available mode.
+
+**Index or call relationships are incomplete:** Check the compilation database, toolchain paths, include paths and preprocessor definitions. Status details distinguish project-file scanning from clangd compilation-database tasks. Check the logs and Hornet exclusion settings for failures or excluded files.
+
+**Duplicate completion or diagnostics:** Check whether another enabled C/C++ extension is providing the same language features.
+
+**Inspect logs:** Run **Hornet C/C++: Open Logs**, then check the extension version and clangd startup messages.
+
+## Feedback
+
+Report problems in [Issues](https://github.com/codehubcloud/hornet-cpptools-release/issues), including the operating system, CPU architecture, VS Code/extension/clangd versions and reproduction steps. Review logs before sharing them because they may contain local project paths.
+
+## Third-party notices
+
+The installer includes `LICENSE.txt` and `ThirdPartyNotices.txt`. clangd is installed separately under its own license. Hornet C/C++ is an independent tool, not Microsoft's official C/C++ extension.
+
+---
+
+<details>
+<summary>???? / Chinese documentation</summary>
+
 Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供四种解析模式、项目索引和交互式函数调用图。
 
 ## 功能演示
 
-![Hornet C/C++ 功能演示：函数调用图、悬停高亮连线、切换解析模式和打开状态菜单](https://github.com/codehubcloud/hornet-cpptools-release/releases/download/v0.0.8/hornet-demo.gif)
+![Hornet C/C++ 功能演示：函数调用图、悬停高亮连线、切换解析模式和打开状态菜单](https://github.com/codehubcloud/hornet-cpptools-release/releases/download/v0.0.9/hornet-demo.gif)
 
 **看清调用关系，快速定位代码。** 动图依次展示函数调用图、连线动态追踪、四种解析模式，以及 CPU、日志和索引维护入口。调用图还支持一键展开和折叠。
 
-[单独打开动图](https://github.com/codehubcloud/hornet-cpptools-release/releases/download/v0.0.8/hornet-demo.gif) · [下载最新版本](https://github.com/codehubcloud/hornet-cpptools-release/releases/latest)
+[单独打开动图](https://github.com/codehubcloud/hornet-cpptools-release/releases/download/v0.0.9/hornet-demo.gif) · [下载最新版本](https://github.com/codehubcloud/hornet-cpptools-release/releases/latest)
 
 本仓库发布插件安装包和使用说明。安装包从 **0.0.1** 开始独立编号。
 
@@ -34,7 +185,7 @@ Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供四种解析模式
 也可以使用命令行，例如：
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.8-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.9-win32-x64.vsix --force
 ```
 
 扩展 ID 为 `hornet.hornet-cpp`，要求 VS Code 1.85 或更新版本。如果已经安装旧发布渠道的 0.1.x 版本，本渠道的 0.0.1 编号更小，需要手动从 VSIX 安装；确认扩展详情显示目标版本。此渠道暂不通过 VS Code Marketplace 自动更新，请关注 Releases。
@@ -87,7 +238,7 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 
 ```json
 {
-  "hornet-cpp.mode": "hybrid",
+  "hornet-cpp.languageProvider": "Hybrid",
   "hornet-cpp.clangd.path": "clangd",
   "hornet-cpp.cpuUsage": "Medium",
   "hornet-cpp.clangd.ignoreDiagnostics": "not_indexed",
@@ -109,7 +260,11 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 
 Tag / Flyweight 支持符号搜索、大纲、补全、定义/声明跳转、语法引用和调用图。它们不会执行预处理、类型检查或重构，同名符号可能返回多个候选；精确重命名、重构和编译错误请使用 Compiler，或为 Hybrid 配置对应文件的编译命令。Flyweight 的速度取决于文件和编辑方式，不保证所有项目都快于 Tag。
 
-轻量索引保存在内存中，重新打开窗口会重新扫描。默认递归扫描工程中的 C/C++ 源文件和头文件，包括大写扩展名、生成目录及第三方目录，不受 `.gitignore`、`files.exclude` 或 `search.exclude` 影响；仅跳过 Git 元数据及 `hornet-cpp.excludePaths` 中明确配置的排除项。扫描没有目录深度、文件数量或 8 MB 单文件限制，读取或解析失败会在日志中列出。Flyweight 的语法包随 VSIX 附带，无须联网下载。
+内置轻量索引可以持久保存 JSON 缓存，并按项目文件更新。递归扫描支持大写扩展名，不受 `.gitignore`、`files.exclude` 或 `search.exclude` 影响；索引范围由 Hornet 全局及模式专属排除项决定，Tag 和 Flyweight 默认排除 build/output 等目录。读取或解析失败会在日志中列出。解析器和格式化器的 WebAssembly 文件随 VSIX 附带，无须联网下载。
+
+在 **Hornet C/C++ → 齿轮 → 扩展设置** 中配置，或搜索 `@ext:hornet.hornet-cpp`。设置说明、选项标签和顶部扩展简介随 VS Code 显示语言切换，JSON 配置键及保存值保持不变。原生详情正文固定读取一份 README，因此本页采用默认英文、中文说明可展开的形式。
+
+使用自己的格式文件时，将 `hornet-cpp.clangd.formatFilePath` 设置为绝对路径或 `${workspaceFolder}/config/.clang-format` 这样的工作区相对路径。指定文件优先；找不到项目格式文件且启用 `clangd.forceFormatStyle` 时，使用本项目定义的 Hornet 样式：LLVM 基础、4 空格缩进、120 列。内置数据库和符号搜索也属于本项目实现，与原版定制服务器的区别已在相关设置中说明。
 
 ## 状态与维护
 
@@ -141,3 +296,5 @@ CPU 设置控制 clangd 线程数量和轻量后台解析器的工作占比，�
 ## 第三方声明
 
 插件安装包内保留 `LICENSE.txt` 和 `ThirdPartyNotices.txt`。clangd 单独安装并遵循其自身许可证。Hornet C/C++ 是独立工具，不是微软官方 C/C++ 扩展。
+
+</details>
