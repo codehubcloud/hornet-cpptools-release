@@ -41,6 +41,10 @@ The extension ID is `hornet.hornet-cpp`. VS Code 1.85 or later is required. If y
 
 For Remote SSH, WSL or Dev Containers, install the extension on the workspace host and choose an installer for that host's operating system. Browser-only VS Code cannot run the local processes required by this extension.
 
+## User guide and walkthrough
+
+Run **Hornet C/C++: Get Started** for the built-in five-step walkthrough, or **Hornet C/C++: Open User Guide** for the offline manual. Both are also available from the Hornet status menu. The walkthrough follows the VS Code display language and remembers progress; English and Chinese manuals are bundled. VS Code handles the walkthrough's initial display on installation.
+
 ## Open your first project
 
 1. Open and trust a C/C++ project folder.
@@ -193,6 +197,10 @@ code --install-extension ./hornet-cpp-0.0.1-win32-x64.vsix --force
 Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选择对应远程系统的包。浏览器版 VS Code 不支持本扩展需要的本地进程。
 
 调用图会为展开的整组分支预留空间，连续调用链保持水平对齐，普通折线统一在相邻列的中线处转弯；点击展开时，所点击函数保持原位。
+
+## 使用指南与分步引导
+
+在命令面板中执行 **Hornet C/C++: 开始使用（分步引导）**，按五个步骤完成上手；执行 **Hornet C/C++: 打开用户使用指南** 阅读离线手册。Hornet 状态菜单也提供 **Get Started** 和 **User Guide**。引导随 VS Code 显示语言切换并保存进度，手册附带中英文版本。安装时的引导展示由 VS Code 管理。
 
 ## 首次打开项目
 
