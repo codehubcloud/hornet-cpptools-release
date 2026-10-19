@@ -34,12 +34,20 @@ In VS Code, open Extensions, choose **… → Install from VSIX…**, select the
 You can also install from the command line:
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.1-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.2-win32-x64.vsix --force
 ```
 
-The extension ID is `hornet.hornet-cpp`. VS Code 1.85 or later is required. If you previously installed a 0.1.x version from another release channel, install this channel's VSIX manually and check the version on the extension details page. This channel does not currently provide Marketplace updates; follow GitHub Releases.
+The extension ID is `hornet.hornet-cpp`. VS Code 1.85 or later is required. If you previously installed a 0.1.x version from another release channel, install this channel's VSIX manually and check the version on the extension details page. This channel uses GitHub Releases for updates.
 
 For Remote SSH, WSL or Dev Containers, install the extension on the workspace host and choose an installer for that host's operating system. Browser-only VS Code cannot run the local processes required by this extension.
+
+## Check for updates
+
+Run **Hornet C/C++: Check for Updates**, or select **Check for Updates** in the Hornet status menu. Hornet checks the public release repository and selects the VSIX for the workspace host, including SSH, WSL and containers. Choose **Download and Install** to verify its SHA-256 checksum and install through VS Code, then reload the window. **Open Release** opens the release page instead.
+
+Startup checks run at most once per day and notify once per available version. Set `hornet-cpp.updates.checkOnStartup` to `false` for manual checks only. Checks and downloads respect the VS Code HTTP proxy and `HTTPS_PROXY` / `HTTP_PROXY`. Background failures appear in **Open Logs**; manual failures also offer the release page.
+
+**Version correction:** This release is **0.0.2**, following **0.0.1**. The incorrectly numbered **0.0.11** release is withdrawn. If you installed it, manually install the **0.0.2** VSIX and reload; that older package does not contain the update checker.
 
 ## User guide and walkthrough
 
@@ -189,14 +197,22 @@ Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供四种解析模式
 也可以使用命令行，例如：
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.1-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.2-win32-x64.vsix --force
 ```
 
-扩展 ID 为 `hornet.hornet-cpp`，要求 VS Code 1.85 或更新版本。如果已经安装旧发布渠道的 0.1.x 版本，本渠道的 0.0.1 编号更小，需要手动从 VSIX 安装；确认扩展详情显示目标版本。此渠道暂不通过 VS Code Marketplace 自动更新，请关注 Releases。
+扩展 ID 为 `hornet.hornet-cpp`，要求 VS Code 1.85 或更新版本。如果已经安装旧发布渠道的 0.1.x 版本，需要手动从 VSIX 安装；确认扩展详情显示目标版本。此渠道通过 GitHub Releases 提供更新。
 
 Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选择对应远程系统的包。浏览器版 VS Code 不支持本扩展需要的本地进程。
 
 调用图会为展开的整组分支预留空间，连续调用链保持水平对齐，普通折线统一在相邻列的中线处转弯；点击展开时，所点击函数保持原位。
+
+## 检查更新
+
+执行 **Hornet C/C++: 检查更新**，或在 Hornet 状态菜单中选择 **Check for Updates**。插件从公开发布仓检查正式版本，并按工作区主机选择安装包，包括 SSH、WSL 和容器。选择**下载并安装**后，插件会验证 SHA-256，再交给 VS Code 安装；完成后重新加载窗口。也可以选择**打开发布页**自行下载。
+
+启动检查最多每天一次，同一可用版本仅提醒一次。将 `hornet-cpp.updates.checkOnStartup` 设置为 `false` 可仅保留手动检查。检查和下载支持 VS Code HTTP 代理及 `HTTPS_PROXY` / `HTTP_PROXY`。后台失败记入 **Open Logs**，手动检查失败时还可打开发布页。
+
+**版本号纠正：** 本次正式版本是 **0.0.2**，承接 **0.0.1**。误编号的 **0.0.11** 已撤回。如果已安装该版本，请手动安装 **0.0.2** 的 VSIX 并重新加载窗口；旧安装包不包含检查更新功能。
 
 ## 使用指南与分步引导
 
