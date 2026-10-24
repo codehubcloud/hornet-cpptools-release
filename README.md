@@ -34,7 +34,7 @@ In VS Code, open Extensions, choose **… → Install from VSIX…**, select the
 You can also install from the command line:
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.3-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.4-win32-x64.vsix --force
 ```
 
 The Marketplace extension ID is `codehubcloud.hornet-cpp`. VS Code 1.85 or later is required. Earlier GitHub 0.0.1/0.0.2 packages used `hornet.hornet-cpp`: uninstall that extension, install the Marketplace edition, and reload VS Code. A different publisher creates a different extension identity, so this migration requires a manual installation once. Do not keep both editions enabled.
@@ -42,6 +42,11 @@ The Marketplace extension ID is `codehubcloud.hornet-cpp`. VS Code 1.85 or later
 For Remote SSH, WSL or Dev Containers, install the extension on the workspace host and choose an installer for that host's operating system. Browser-only VS Code cannot run the local processes required by this extension.
 
 ## Check for updates
+
+### Changes in 0.0.4
+
+- Increase the graph node limit from 250 to 1024, including the center node.
+- Press **F6** on a selected variable or function, or the symbol at the cursor, to open its relationship graph. Reassign the shortcut in VS Code's Keyboard Shortcuts editor.
 
 ### Changes in 0.0.3
 
@@ -57,7 +62,7 @@ Run **Hornet C/C++: Check for Updates**, or select **Check for Updates** in the 
 
 Startup checks run at most once per day and notify once per available version. Set `hornet-cpp.updates.checkOnStartup` to `false` for manual checks only. Checks and downloads respect the VS Code HTTP proxy and `HTTPS_PROXY` / `HTTP_PROXY`. Background failures appear in **Open Logs**; manual failures also offer the release page.
 
-**Version correction:** The corrected **0.0.2** followed **0.0.1**; the current release is **0.0.3**. The incorrectly numbered **0.0.11** release is withdrawn. If you installed it, manually install the **0.0.2** VSIX and reload; that older package does not contain the update checker.
+**Version correction:** The corrected **0.0.2** followed **0.0.1**; the current release is **0.0.4**. The incorrectly numbered **0.0.11** release is withdrawn. If you installed it, manually install the **0.0.2** VSIX and reload; that older package does not contain the update checker.
 
 ## User guide and walkthrough
 
@@ -86,6 +91,8 @@ Available semantic features depend on the selected server and the completeness o
 
 Right-click a C/C++ function and run **Hornet Show Graph** to open the **Hornet Graph** panel.
 
+You can also select a variable or function name, or place the cursor on it, and press **F6** in a C/C++ or CUDA editor. To customize or remove the shortcut, open **Preferences: Open Keyboard Shortcuts**, search for `@command:hornet-cpp.showCallGraph`, and edit its binding.
+
 - Use the plus/minus buttons on either side of a function to expand or collapse relationships. The selected function keeps its screen position and zoom level while new nodes are arranged around it.
 - Use the toolbar to expand or collapse branches together. Expansion respects the configured depth and the graph's node limit.
 - Hover over or click a connection to highlight its calling direction.
@@ -93,7 +100,7 @@ Right-click a C/C++ function and run **Hornet Show Graph** to open the **Hornet 
 - Drag the background to pan, scroll or use the toolbar to zoom, and double-click a function to navigate to its code.
 - Use the center action to continue exploring from a different function.
 
-Each graph loads up to 250 functions. For larger call chains, change the center to explore another section. Branch groups receive their own space, sequential call chains remain horizontally aligned, and connection arrows attach to function ports.
+Each graph loads up to 1024 functions. For larger call chains, change the center to explore another section. Branch groups receive their own space, sequential call chains remain horizontally aligned, and connection arrows attach to function ports.
 
 ## Compilation settings and indexing
 
@@ -207,7 +214,7 @@ Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供四种解析模式
 也可以使用命令行，例如：
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.3-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.4-win32-x64.vsix --force
 ```
 
 市场版扩展 ID 为 `codehubcloud.hornet-cpp`，要求 VS Code 1.85 或更新版本。之前 GitHub 的 0.0.1/0.0.2 安装包使用 `hornet.hornet-cpp`：请卸载旧扩展，安装市场版，再重新加载 VS Code。发布者不同会产生不同扩展 ID，因此首次迁移需要手动安装一次，请勿同时启用两个版本。
@@ -217,6 +224,11 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 调用图会为展开的整组分支预留空间，连续调用链保持水平对齐，普通折线统一在相邻列的中线处转弯；点击展开时，所点击函数保持原位。
 
 ## 检查更新
+
+### 0.0.4 更新
+
+- 单张关系图的节点上限由 250 提高到 1024，包含中心节点。
+- 选中变量或函数名称，或将光标放在名称上，按 **F6** 打开对应关系图；支持通过 VS Code 键盘快捷方式修改绑定。
 
 ### 0.0.3 更新
 
@@ -232,7 +244,7 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 
 启动检查最多每天一次，同一可用版本仅提醒一次。将 `hornet-cpp.updates.checkOnStartup` 设置为 `false` 可仅保留手动检查。检查和下载支持 VS Code HTTP 代理及 `HTTPS_PROXY` / `HTTP_PROXY`。后台失败记入 **Open Logs**，手动检查失败时还可打开发布页。
 
-**版本号纠正：** **0.0.2** 承接 **0.0.1**，当前版本为 **0.0.3**。误编号的 **0.0.11** 已撤回。如果已安装该旧版本，请手动安装当前市场版并重新加载窗口；旧安装包不包含检查更新功能。
+**版本号纠正：** **0.0.2** 承接 **0.0.1**，当前版本为 **0.0.4**。误编号的 **0.0.11** 已撤回。如果已安装该旧版本，请手动安装当前市场版并重新加载窗口；旧安装包不包含检查更新功能。
 
 ## 使用指南与分步引导
 
@@ -261,6 +273,8 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 
 在 C/C++ 函数上右键执行 **Hornet Show Graph**，图形显示在底部 **Hornet Graph** 面板。
 
+也可以在 C/C++ 或 CUDA 编辑器中选中变量、函数名称，或将光标放在名称上，按 **F6** 查看关系图。自定义或取消快捷键：执行 **首选项: 打开键盘快捷方式**，搜索 `@command:hornet-cpp.showCallGraph`，修改对应绑定。
+
 - 函数框两侧的加减按钮展开或折叠调用关系。操作时该函数保持原来的屏幕位置和缩放比例，新增内容向四周排布；需要查看全图时点击适应窗口按钮。
 - 工具栏支持一键展开全部、一键折叠全部；展开受当前图的节点上限约束。
 - 将鼠标移到连线上或点击连线，可显示沿调用方向移动的高亮短线。
@@ -268,7 +282,7 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 - 拖动空白区域平移，鼠标滚轮或工具栏缩放，双击函数跳转到对应代码。
 - 使用“设为中心”从另一个函数继续浏览。
 
-每张图最多加载 250 个函数。大型调用链可切换中心分段浏览。布局为跨列调用预留连线路径，并将箭头连接到目标函数框的端口中心。
+每张图最多加载 1024 个函数。大型调用链可切换中心分段浏览。布局为跨列调用预留连线路径，并将箭头连接到目标函数框的端口中心。
 
 ## 编译配置与索引
 
