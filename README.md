@@ -34,7 +34,7 @@ In VS Code, open Extensions, choose **… → Install from VSIX…**, select the
 You can also install from the command line:
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.6-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.7-win32-x64.vsix --force
 ```
 
 The Marketplace extension ID is `codehubcloud.hornet-cpp`. VS Code 1.85 or later is required. Earlier GitHub 0.0.1/0.0.2 packages used `hornet.hornet-cpp`: uninstall that extension, install the Marketplace edition, and reload VS Code. A different publisher creates a different extension identity, so this migration requires a manual installation once. Do not keep both editions enabled.
@@ -42,6 +42,14 @@ The Marketplace extension ID is `codehubcloud.hornet-cpp`. VS Code 1.85 or later
 For Remote SSH, WSL or Dev Containers, install the extension on the workspace host and choose an installer for that host's operating system. Browser-only VS Code cannot run the local processes required by this extension.
 
 ## Check for updates
+
+### Changes in 0.0.7
+
+- Build function relationships directly from the scanned inventory; merge repeated calls and equivalent macro definitions while preserving their source locations.
+- Match overloads using argument counts, inferred expression types, typedefs, casts and standard conversion ranks, including default parameters. Retain candidates when syntax information cannot distinguish them.
+- Index compilation-database sources, external and forced headers, continued macro definitions and conditional branches; find indexed macros even when an include edge is unavailable.
+- Share Hybrid's bundled inventory, bound parser-worker memory and concurrency, and prevent managed compilation databases and Git metadata refreshes from triggering repeated scans.
+- Rebuild older caches to collect argument-type metadata. After installing, reload VS Code and run **Hornet: Rebuild Index** once.
 
 ### Changes in 0.0.6
 
@@ -75,7 +83,7 @@ Run **Hornet C/C++: Check for Updates**, or select **Check for Updates** in the 
 
 Startup checks run at most once per day and notify once per available version. Set `hornet-cpp.updates.checkOnStartup` to `false` for manual checks only. Checks and downloads respect the VS Code HTTP proxy and `HTTPS_PROXY` / `HTTP_PROXY`. Background failures appear in **Open Logs**; manual failures also offer the release page.
 
-**Version correction:** The corrected **0.0.2** followed **0.0.1**; the current release is **0.0.6**. The incorrectly numbered **0.0.11** release is withdrawn. If you installed it, manually install the **0.0.2** VSIX and reload; that older package does not contain the update checker.
+**Version correction:** The corrected **0.0.2** followed **0.0.1**; the current release is **0.0.7**. The incorrectly numbered **0.0.11** release is withdrawn. If you installed it, manually install the **0.0.2** VSIX and reload; that older package does not contain the update checker.
 
 ## User guide and walkthrough
 
@@ -224,7 +232,7 @@ Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供四种解析模式
 也可以使用命令行，例如：
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.6-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.7-win32-x64.vsix --force
 ```
 
 市场版扩展 ID 为 `codehubcloud.hornet-cpp`，要求 VS Code 1.85 或更新版本。之前 GitHub 的 0.0.1/0.0.2 安装包使用 `hornet.hornet-cpp`：请卸载旧扩展，安装市场版，再重新加载 VS Code。发布者不同会产生不同扩展 ID，因此首次迁移需要手动安装一次，请勿同时启用两个版本。
@@ -234,6 +242,14 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 调用图会为展开的整组分支预留空间，连续调用链保持水平对齐，普通折线统一在相邻列的中线处转弯；点击展开时，所点击函数保持原位。
 
 ## 检查更新
+
+### 0.0.7 更新
+
+- 直接使用扫描索引建立函数关系，合并重复调用及内容相同的宏定义，并保留源码位置。
+- 按参数个数、推断的实参类型、typedef、强制转换及标准转换优先级匹配重载，支持默认参数；语法信息不足以区分时保留候选。
+- 补齐编译数据库源文件、外部及强制包含头文件、多行宏和条件分支的索引；include 链缺失时仍可回查已入库的宏定义。
+- Hybrid 共享内置索引，限制解析线程的内存及并发，避免托管编译数据库和 Git 元数据刷新触发重复扫描。
+- 旧缓存自动失效以收集实参类型信息。安装后请重载 VS Code，并执行一次 **Hornet: Rebuild Index**。
 
 ### 0.0.6 更新
 
@@ -267,7 +283,7 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 
 启动检查最多每天一次，同一可用版本仅提醒一次。将 `hornet-cpp.updates.checkOnStartup` 设置为 `false` 可仅保留手动检查。检查和下载支持 VS Code HTTP 代理及 `HTTPS_PROXY` / `HTTP_PROXY`。后台失败记入 **Open Logs**，手动检查失败时还可打开发布页。
 
-**版本号纠正：** **0.0.2** 承接 **0.0.1**，当前版本为 **0.0.6**。误编号的 **0.0.11** 已撤回。如果已安装该旧版本，请手动安装当前市场版并重新加载窗口；旧安装包不包含检查更新功能。
+**版本号纠正：** **0.0.2** 承接 **0.0.1**，当前版本为 **0.0.7**。误编号的 **0.0.11** 已撤回。如果已安装该旧版本，请手动安装当前市场版并重新加载窗口；旧安装包不包含检查更新功能。
 
 ## 使用指南与分步引导
 
