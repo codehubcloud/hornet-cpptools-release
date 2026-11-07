@@ -134,7 +134,7 @@ You can also select a variable or function name, or place the cursor on it, and 
 - Drag the background to pan, scroll or use the toolbar to zoom, and double-click a function to navigate to its code.
 - Use the center action to continue exploring from a different function.
 
-Each graph loads up to 1024 functions. For larger call chains, change the center to explore another section. Branch groups receive their own space, sequential call chains remain horizontally aligned, and connection arrows attach to function ports.
+Each graph loads up to 1024 functions. For larger call chains, change the center to explore another section. Spacing follows the actual height of neighboring branches, so expanding a large subtree keeps unrelated leaf siblings compact. Sequential call chains remain horizontally aligned, and connection arrows attach to function ports.
 
 ## Compilation settings and indexing
 
@@ -252,7 +252,7 @@ code --install-extension ./hornet-cpp-0.0.9-win32-x64.vsix --force
 
 Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选择对应远程系统的包。浏览器版 VS Code 不支持本扩展需要的本地进程。
 
-调用图会为展开的整组分支预留空间，连续调用链保持水平对齐，普通折线统一在相邻列的中线处转弯；点击展开时，所点击函数保持原位。
+调用图按相邻分支的实际高度预留空间，展开较大的子树时，其他叶子节点仍保持紧凑间距。连续调用链保持水平对齐，普通折线统一在相邻列的中线处转弯；点击展开时，所点击函数保持原位。
 
 ## 检查更新
 
