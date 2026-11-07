@@ -34,7 +34,7 @@ In VS Code, open Extensions, choose **… → Install from VSIX…**, select the
 You can also install from the command line:
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.8-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.9-win32-x64.vsix --force
 ```
 
 The Marketplace extension ID is `codehubcloud.hornet-cpp`. VS Code 1.85 or later is required. Earlier GitHub 0.0.1/0.0.2 packages used `hornet.hornet-cpp`: uninstall that extension, install the Marketplace edition, and reload VS Code. A different publisher creates a different extension identity, so this migration requires a manual installation once. Do not keep both editions enabled.
@@ -42,6 +42,12 @@ The Marketplace extension ID is `codehubcloud.hornet-cpp`. VS Code 1.85 or later
 For Remote SSH, WSL or Dev Containers, install the extension on the workspace host and choose an installer for that host's operating system. Browser-only VS Code cannot run the local processes required by this extension.
 
 ## Check for updates
+
+### Changes in 0.0.9
+
+- Move all graph actions to the native toolbar at the top right of the panel, alongside the panel tabs. Remove the duplicate title, inline toolbar and status bar so the canvas fills the content area.
+- Remove saved legacy graph/reference splits during upgrades. Symbol References opens separately on demand, and graph information, counts and usage hints are available through the information action.
+- Make **Expand all** follow every caller and callee level by default instead of stopping after three levels. Set `hornet-cpp.callhierarchy.expandAllMaxDepth` to **0** for unlimited depth or a positive number for a custom limit. Cycles and the 1024-node cap remain bounded.
 
 ### Changes in 0.0.8
 
@@ -90,7 +96,7 @@ Run **Hornet C/C++: Check for Updates**, or select **Check for Updates** in the 
 
 Startup checks run at most once per day and notify once per available version. Set `hornet-cpp.updates.checkOnStartup` to `false` for manual checks only. Checks and downloads respect the VS Code HTTP proxy and `HTTPS_PROXY` / `HTTP_PROXY`. Background failures appear in **Open Logs**; manual failures also offer the release page.
 
-**Version correction:** The corrected **0.0.2** followed **0.0.1**; the current release is **0.0.8**. The incorrectly numbered **0.0.11** release is withdrawn. If you installed it, manually install the **0.0.2** VSIX and reload; that older package does not contain the update checker.
+**Version correction:** The corrected **0.0.2** followed **0.0.1**; the current release is **0.0.9**. The incorrectly numbered **0.0.11** release is withdrawn. If you installed it, manually install the **0.0.2** VSIX and reload; that older package does not contain the update checker.
 
 ## User guide and walkthrough
 
@@ -239,7 +245,7 @@ Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供四种解析模式
 也可以使用命令行，例如：
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.8-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.9-win32-x64.vsix --force
 ```
 
 市场版扩展 ID 为 `codehubcloud.hornet-cpp`，要求 VS Code 1.85 或更新版本。之前 GitHub 的 0.0.1/0.0.2 安装包使用 `hornet.hornet-cpp`：请卸载旧扩展，安装市场版，再重新加载 VS Code。发布者不同会产生不同扩展 ID，因此首次迁移需要手动安装一次，请勿同时启用两个版本。
@@ -249,6 +255,12 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 调用图会为展开的整组分支预留空间，连续调用链保持水平对齐，普通折线统一在相邻列的中线处转弯；点击展开时，所点击函数保持原位。
 
 ## 检查更新
+
+### 0.0.9 更新
+
+- 将所有关系图操作移到面板右上角的原生工具栏，与面板标签同一行；移除重复标题、图内工具栏和状态栏，让画布占满内容区域。
+- 升级时移除旧版保存的图形与引用分栏；“符号引用”按需单独打开，统计、操作说明和索引提示统一通过信息按钮查看。
+- **展开全部**默认遍历所有调用者与被调用者层级，不再只展开三层。`hornet-cpp.callhierarchy.expandAllMaxDepth` 为 **0** 时不限深度，正数可自定义层数限制；保留循环去重和 1024 个节点的上限。
 
 ### 0.0.8 更新
 
@@ -297,7 +309,7 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 
 启动检查最多每天一次，同一可用版本仅提醒一次。将 `hornet-cpp.updates.checkOnStartup` 设置为 `false` 可仅保留手动检查。检查和下载支持 VS Code HTTP 代理及 `HTTPS_PROXY` / `HTTP_PROXY`。后台失败记入 **Open Logs**，手动检查失败时还可打开发布页。
 
-**版本号纠正：** **0.0.2** 承接 **0.0.1**，当前版本为 **0.0.8**。误编号的 **0.0.11** 已撤回。如果已安装该旧版本，请手动安装当前市场版并重新加载窗口；旧安装包不包含检查更新功能。
+**版本号纠正：** **0.0.2** 承接 **0.0.1**，当前版本为 **0.0.9**。误编号的 **0.0.11** 已撤回。如果已安装该旧版本，请手动安装当前市场版并重新加载窗口；旧安装包不包含检查更新功能。
 
 ## 使用指南与分步引导
 
