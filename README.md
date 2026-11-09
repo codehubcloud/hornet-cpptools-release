@@ -34,7 +34,7 @@ In VS Code, open Extensions, choose **… → Install from VSIX…**, select the
 You can also install from the command line:
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.9-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.11-win32-x64.vsix --force
 ```
 
 The Marketplace extension ID is `codehubcloud.hornet-cpp`. VS Code 1.85 or later is required. Earlier GitHub 0.0.1/0.0.2 packages used `hornet.hornet-cpp`: uninstall that extension, install the Marketplace edition, and reload VS Code. A different publisher creates a different extension identity, so this migration requires a manual installation once. Do not keep both editions enabled.
@@ -42,6 +42,12 @@ The Marketplace extension ID is `codehubcloud.hornet-cpp`. VS Code 1.85 or later
 For Remote SSH, WSL or Dev Containers, install the extension on the workspace host and choose an installer for that host's operating system. Browser-only VS Code cannot run the local processes required by this extension.
 
 ## Check for updates
+
+### Changes in 0.0.11
+
+- Display every call as its own right-side node, including repeated calls to the same function and multiple calls on one line. Sort nodes by the caller's source line and column, including after expanding branches.
+- Show the call's file, line and column on each callee node. Double-click opens that exact call directly, including calls whose definitions are unavailable.
+- Preserve independent branch controls for repeated calls and keep recursive expansion finite. Variable reference navigation keeps its existing behavior.
 
 ### Changes in 0.0.9
 
@@ -96,7 +102,7 @@ Run **Hornet C/C++: Check for Updates**, or select **Check for Updates** in the 
 
 Startup checks run at most once per day and notify once per available version. Set `hornet-cpp.updates.checkOnStartup` to `false` for manual checks only. Checks and downloads respect the VS Code HTTP proxy and `HTTPS_PROXY` / `HTTP_PROXY`. Background failures appear in **Open Logs**; manual failures also offer the release page.
 
-**Version correction:** The corrected **0.0.2** followed **0.0.1**; the current release is **0.0.9**. The incorrectly numbered **0.0.11** release is withdrawn. If you installed it, manually install the **0.0.2** VSIX and reload; that older package does not contain the update checker.
+**Current release:** **0.0.11** follows **0.0.10** in this release channel. If an older installer cannot check for updates, install the current VSIX manually and reload VS Code.
 
 ## User guide and walkthrough
 
@@ -131,7 +137,8 @@ You can also select a variable or function name, or place the cursor on it, and 
 - Use the toolbar to expand or collapse branches together. Expansion respects the configured depth and the graph's node limit.
 - Hover over or click a connection to highlight its calling direction.
 - Click the background or press Esc to clear the selected connection.
-- Drag the background to pan, scroll or use the toolbar to zoom, and double-click a function to navigate to its code.
+- Each call has its own right-side node, including repeated calls to the same function. Nodes show the caller's file, line and column and follow source order from top to bottom; double-click a node to open that exact call.
+- Drag the background to pan, and scroll or use the toolbar to zoom.
 - Use the center action to continue exploring from a different function.
 
 Each graph loads up to 1024 functions. For larger call chains, change the center to explore another section. Spacing follows the actual height of neighboring branches, so expanding a large subtree keeps unrelated leaf siblings compact. Sequential call chains remain horizontally aligned, and connection arrows attach to function ports.
@@ -245,7 +252,7 @@ Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供四种解析模式
 也可以使用命令行，例如：
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.9-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.11-win32-x64.vsix --force
 ```
 
 市场版扩展 ID 为 `codehubcloud.hornet-cpp`，要求 VS Code 1.85 或更新版本。之前 GitHub 的 0.0.1/0.0.2 安装包使用 `hornet.hornet-cpp`：请卸载旧扩展，安装市场版，再重新加载 VS Code。发布者不同会产生不同扩展 ID，因此首次迁移需要手动安装一次，请勿同时启用两个版本。
@@ -255,6 +262,12 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 调用图按相邻分支的实际高度预留空间，展开较大的子树时，其他叶子节点仍保持紧凑间距。连续调用链保持水平对齐，普通折线统一在相邻列的中线处转弯；点击展开时，所点击函数保持原位。
 
 ## 检查更新
+
+### 0.0.11 更新
+
+- 右侧按每次调用分别显示节点，同一函数的重复调用和同一行中的多次调用也分别列出。按调用者源码的行号、列号排序，展开分支后仍保持顺序。
+- 被调用节点标明调用文件、行号和列号，双击直接跳转到对应的那次调用；即使未找到定义也可跳转调用位置。
+- 重复调用的分支可独立展开和折叠，递归展开能够正常终止。变量引用跳转保持原有行为。
 
 ### 0.0.9 更新
 
@@ -309,7 +322,7 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 
 启动检查最多每天一次，同一可用版本仅提醒一次。将 `hornet-cpp.updates.checkOnStartup` 设置为 `false` 可仅保留手动检查。检查和下载支持 VS Code HTTP 代理及 `HTTPS_PROXY` / `HTTP_PROXY`。后台失败记入 **Open Logs**，手动检查失败时还可打开发布页。
 
-**版本号纠正：** **0.0.2** 承接 **0.0.1**，当前版本为 **0.0.9**。误编号的 **0.0.11** 已撤回。如果已安装该旧版本，请手动安装当前市场版并重新加载窗口；旧安装包不包含检查更新功能。
+**当前版本：** 本发布渠道的 **0.0.11** 承接 **0.0.10**。若旧安装包无法检查更新，请手动安装当前 VSIX 并重新加载 VS Code。
 
 ## 使用指南与分步引导
 
@@ -344,7 +357,8 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 - 工具栏支持一键展开全部、一键折叠全部；展开受当前图的节点上限约束。
 - 将鼠标移到连线上或点击连线，可显示沿调用方向移动的高亮短线。
 - 点击空白处或按 Esc 取消已选择的连线。
-- 拖动空白区域平移，鼠标滚轮或工具栏缩放，双击函数跳转到对应代码。
+- 右侧按每次调用分别显示节点，同一函数被重复调用时也分别列出。节点标明调用文件、行号和列号，并按源码位置从上到下排列；双击直接跳转到对应的那次调用。
+- 拖动空白区域平移，鼠标滚轮或工具栏缩放。
 - 使用“设为中心”从另一个函数继续浏览。
 
 每张图最多加载 1024 个函数。大型调用链可切换中心分段浏览。布局为跨列调用预留连线路径，并将箭头连接到目标函数框的端口中心。
