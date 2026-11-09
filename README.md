@@ -34,7 +34,7 @@ In VS Code, open Extensions, choose **… → Install from VSIX…**, select the
 You can also install from the command line:
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.11-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.12-win32-x64.vsix --force
 ```
 
 The Marketplace extension ID is `codehubcloud.hornet-cpp`. VS Code 1.85 or later is required. Earlier GitHub 0.0.1/0.0.2 packages used `hornet.hornet-cpp`: uninstall that extension, install the Marketplace edition, and reload VS Code. A different publisher creates a different extension identity, so this migration requires a manual installation once. Do not keep both editions enabled.
@@ -42,6 +42,12 @@ The Marketplace extension ID is `codehubcloud.hornet-cpp`. VS Code 1.85 or later
 For Remote SSH, WSL or Dev Containers, install the extension on the workspace host and choose an installer for that host's operating system. Browser-only VS Code cannot run the local processes required by this extension.
 
 ## Check for updates
+
+### Changes in 0.0.12
+
+- Compact expanded branches using the space they occupy in each column, and keep the main caller trunk horizontally aligned with the selected function.
+- Match the default vertical node spacing to the direct callee column. Allow extra spacing at joins so independent caller chains remain horizontal.
+- Fit the complete graph after expanding or collapsing all branches, including in short panels, and preserve smooth zooming for large graphs.
 
 ### Changes in 0.0.11
 
@@ -102,7 +108,7 @@ Run **Hornet C/C++: Check for Updates**, or select **Check for Updates** in the 
 
 Startup checks run at most once per day and notify once per available version. Set `hornet-cpp.updates.checkOnStartup` to `false` for manual checks only. Checks and downloads respect the VS Code HTTP proxy and `HTTPS_PROXY` / `HTTP_PROXY`. Background failures appear in **Open Logs**; manual failures also offer the release page.
 
-**Current release:** **0.0.11** follows **0.0.10** in this release channel. If an older installer cannot check for updates, install the current VSIX manually and reload VS Code.
+**Current release:** **0.0.12** follows **0.0.11** in this release channel. If an older installer cannot check for updates, install the current VSIX manually and reload VS Code.
 
 ## User guide and walkthrough
 
@@ -134,14 +140,14 @@ Right-click a C/C++ function and run **Hornet Show Graph** to open the **Hornet 
 You can also select a variable or function name, or place the cursor on it, and press **F6** in a C/C++ or CUDA editor. To customize or remove the shortcut, open **Preferences: Open Keyboard Shortcuts**, search for `@command:hornet-cpp.showCallGraph`, and edit its binding.
 
 - Use the plus/minus buttons on either side of a function to expand or collapse relationships. The selected function keeps its screen position and zoom level while new nodes are arranged around it.
-- Use the toolbar to expand or collapse branches together. Expansion respects the configured depth and the graph's node limit.
+- Use the toolbar to expand or collapse branches together and fit the result to the panel. Expansion respects the configured depth and the graph's node limit. **Fit graph** shows the complete graph even in a short panel; zoom in to inspect large graphs.
 - Hover over or click a connection to highlight its calling direction.
 - Click the background or press Esc to clear the selected connection.
 - Each call has its own right-side node, including repeated calls to the same function. Nodes show the caller's file, line and column and follow source order from top to bottom; double-click a node to open that exact call.
 - Drag the background to pan, and scroll or use the toolbar to zoom.
 - Use the center action to continue exploring from a different function.
 
-Each graph loads up to 1024 functions. For larger call chains, change the center to explore another section. Spacing follows the actual height of neighboring branches, so expanding a large subtree keeps unrelated leaf siblings compact. Sequential call chains remain horizontally aligned, and connection arrows attach to function ports.
+Each graph loads up to 1024 functions. For larger call chains, change the center to explore another section. Branches reserve space only in columns they both occupy, so a tall expanded subtree keeps its parent's leaf siblings evenly spaced. Shared caller trunks align with the selected function; their upstream node groups use the direct callee column's adjacent-node spacing by default. Converging caller columns can widen their gaps to keep independent caller chains horizontal. Connection arrows attach to function ports.
 
 ## Compilation settings and indexing
 
@@ -252,16 +258,22 @@ Hornet C/C++ 是面向 VS Code 的 C/C++ 语言扩展，提供四种解析模式
 也可以使用命令行，例如：
 
 ```powershell
-code --install-extension ./hornet-cpp-0.0.11-win32-x64.vsix --force
+code --install-extension ./hornet-cpp-0.0.12-win32-x64.vsix --force
 ```
 
 市场版扩展 ID 为 `codehubcloud.hornet-cpp`，要求 VS Code 1.85 或更新版本。之前 GitHub 的 0.0.1/0.0.2 安装包使用 `hornet.hornet-cpp`：请卸载旧扩展，安装市场版，再重新加载 VS Code。发布者不同会产生不同扩展 ID，因此首次迁移需要手动安装一次，请勿同时启用两个版本。
 
 Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选择对应远程系统的包。浏览器版 VS Code 不支持本扩展需要的本地进程。
 
-调用图按相邻分支的实际高度预留空间，展开较大的子树时，其他叶子节点仍保持紧凑间距。连续调用链保持水平对齐，普通折线统一在相邻列的中线处转弯；点击展开时，所点击函数保持原位。
+调用图按每一列实际占用的空间预留间距，只有占用相同列的子树才互相让位；展开较高的右侧子树时，父级同列的叶子兄弟节点仍保持均匀间距。源码顺序约束下的重复调用会重新压紧排列，避免累积大段纵向空白。共享调用主干与中心函数保持同一水平中线，上游节点组默认采用右侧直接被调用函数列的相邻节点间距；中间汇合列可适当放宽间距，让独立调用链保持水平。普通折线统一在相邻列的中线处转弯；点击单个分支展开时，所点击函数保持原位。顶部的全部展开、全部折叠会重新适配画布；“适应画布”可在较矮的面板中显示完整关系图，节点较多时可放大查看。
 
 ## 检查更新
+
+### 0.0.12 更新
+
+- 按各列实际占用压紧展开的分支，让主要调用链与中心函数保持水平对齐。
+- 默认纵向间距与右侧直接被调用函数列一致；汇合列允许适当放宽间距，让独立调用链保持水平。
+- 全部展开、全部折叠后自动适应画布，较矮的面板也可显示完整图形，并保持大图缩放平顺。
 
 ### 0.0.11 更新
 
@@ -322,7 +334,7 @@ Remote SSH、WSL 和开发容器应在远程工作区环境安装扩展，并选
 
 启动检查最多每天一次，同一可用版本仅提醒一次。将 `hornet-cpp.updates.checkOnStartup` 设置为 `false` 可仅保留手动检查。检查和下载支持 VS Code HTTP 代理及 `HTTPS_PROXY` / `HTTP_PROXY`。后台失败记入 **Open Logs**，手动检查失败时还可打开发布页。
 
-**当前版本：** 本发布渠道的 **0.0.11** 承接 **0.0.10**。若旧安装包无法检查更新，请手动安装当前 VSIX 并重新加载 VS Code。
+**当前版本：** 本发布渠道的 **0.0.12** 承接 **0.0.11**。若旧安装包无法检查更新，请手动安装当前 VSIX 并重新加载 VS Code。
 
 ## 使用指南与分步引导
 
